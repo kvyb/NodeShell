@@ -6,6 +6,7 @@ const { exec } = require('child_process')
 
 // CREATE APPLICATION
 const app = express()
+app.set("view engine","ejs")
 
 // FILE STORAGE
 const storage = multer.diskStorage({
@@ -25,13 +26,11 @@ app.use(express.static('public'))
 
 // ROUTES
 app.get('/', (req, res) => {
-    res.json({
-        message: 'Working'
-    })
+    res.render("index");
 })
 
-app.post('/', upload.single('photo'), async (req, res) => {
-    const photo = req.file
+app.post('/form', upload.single('file'), async (req, res) => {
+    const image = req.file
 
     const { stdout, stderr } = await exec('mkdir test');
 
@@ -39,7 +38,7 @@ app.post('/', upload.single('photo'), async (req, res) => {
     console.log('stderr:', stderr);
 
     res.json({
-        photo: `http://localhost:3000/${photo.filename}`
+        image: `http://localhost:3000/${image.filename}`
     })
 })
 
